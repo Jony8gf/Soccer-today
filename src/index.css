@@ -15,3 +15,13 @@ code {
 .liga-nav{
   background-color: #6dff8d34;
 }
+
+.tablaCompeticiones {
+  border-radius: 2rem;
+}
+
+.tablaHead {
+  background-color:#208454;
+  border-radius: 2rem;
+}
+
