@@ -113,7 +113,7 @@ const llamadaApi = async () => {
                 <div className="col-12 d-flex justify-content-center p-2 m-0 liga-nav">
                     {/* <span className="text-dark mx-3"><b>   </b></span> */}
 
-                    <NavLink  className="nav-link" to={{
+                    <NavLink  className="nav-link text-decoration-none text-dark" to={{
                                                                 pathname: '/clasificaciones',
                                                                 state: { id: match.competition.id }
                                                                 }}>{match.competition.name}</NavLink>
