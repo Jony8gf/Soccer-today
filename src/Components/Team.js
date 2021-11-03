@@ -1,13 +1,13 @@
 import React from 'react';
 import { useState, useEffect } from "react";
 import {NavLink}  from 'react-router-dom';
+import Tabs from 'react-bootstrap/Tabs'
+import Tab from 'react-bootstrap/Tab'
  
 const Team = ({ location }) => {
 
     let urlTeam = 'https://api.football-data.org/v2/teams/'+location.state.id
     let urlMatches = 'https://api.football-data.org/v2/teams/'+location.state.id+'/matches/'
-
-
     
         const [team, setTeam] = useState([])
         useEffect(() => {
@@ -17,6 +17,8 @@ const Team = ({ location }) => {
         const [squad, setSquad] = useState([])
         const [previewMatches, setPreviewMatches] = useState([])
         const [nextMatches, setNextMatches] = useState([])
+        const [key, setKey] = useState('equipo');
+
     
         const llamadaApi = async () => {
     
@@ -47,32 +49,6 @@ const Team = ({ location }) => {
             setPreviewMatches(json.filter(x => x.status === 'FINISHED'))
             setNextMatches(json.filter(x => x.status === 'SCHEDULED'))
         }
-
-        function handlePestanas(e) {
-            e.preventDefault();
-            console.log(e.target.getAttribute("id"));
-            var pesEquipos = document.getElementById("pesEquipo");
-            var pesProximos = document.getElementById("pesProximos");
-            var pesResultados = document.getElementById("pesResultados");
-            
-            switch(e.target.getAttribute("id")){
-                case "pestanaEquipo":
-                    pesEquipos.className = " tab-pane fade in active visible";
-                    pesResultados.className = " tab-pane fade invisible";
-                    pesProximos.className = " tab-pane fade invisible";
-                    break
-                case "pestanaResultados":
-                    pesEquipos.className = "tab-pane fade invisible";
-                    pesResultados.className = " tab-pane fade in active visible";
-                    pesProximos.className = "tab-pane fade invisible";
-                    break
-                case "pestanaProximos":
-                    pesEquipos.className = "tab-pane fade in active invisible";
-                    pesResultados.className = "tab-pane fade in active invisible";
-                    pesProximos.className = "tab-pane fade visible";
-                    break
-            }
-          }
 
         const calcularEdad = (fechaNacimiento) => { 
 
@@ -115,23 +91,16 @@ const Team = ({ location }) => {
                             </div>
                         </div>
 
-                        {/* TABS  */}
-                        {/* <ul className="nav nav-tabs">
-                            <li className="nav-item active"><a id="pestanaEquipo"  className="nav-link" data-toggle="tab" onClick={handlePestanas} >Equipo</a></li>
-                            <li className="nav-item" ><a id="pestanaResultados" className="nav-link" data-toggle="tab"  onClick={handlePestanas}>Resultados</a></li>
-                            <li className="nav-item" ><a id="pestanaProximos" className="nav-link" data-toggle="tab" onClick={handlePestanas}>Proximos encuentros</a></li>
-                            {/* <li id="pestanaEquipoPadre" className="nav-item active">
-                                <a  id="pestanaEquipo" className="nav-link active" aria-current="page" onClick={handlePestanas}>Equipo</a>
-                            </li>
-                            <li id="pestanaResultadosPadre" className="nav-item">
-                                <a  id="pestanaResultados" className="nav-link" onClick={handlePestanas}>Resultados</a>
-                            </li>
-                            <li  id="pestanaProximosPadres" className="nav-item">
-                                <a id="pestanaProximos" className="nav-link" onClick={handlePestanas}>Proximos encuentros</a>
-                            </li> 
-                        </ul> */}
-
-                                    <div className="col-12 bg-success rounded p-2 mt-5 d-flex justify-content-center">
+                            {/* TABS  */}
+                            <Tabs
+                                id="controlled-tab-example"
+                                defaultActiveKey="equipo"
+                                activeKey={key}
+                                onSelect={(k) => setKey(k)}
+                                className="mb-3 mt-3"
+                                >
+                                <Tab eventKey="equipo" title="Equipo">
+                                    <div className="col-12 bg-success rounded p-2 mt-1 d-flex justify-content-center">
                                         <h4 className="text-white">Equipo</h4>
                                     </div>
 
@@ -154,7 +123,11 @@ const Team = ({ location }) => {
                                                     {/* NOMBRE JUGADOR */}
                                                     <td> 
                                                 
-                                                        <b>{player.name}</b>
+                                                        
+                                                        <NavLink  className="nav-link text-decoration-none text-dark" to={{
+                                                                                                pathname: '/player',
+                                                                                                state: { id: player.id }
+                                                                                                }}><b>{player.name}</b></NavLink>
                                                 
                                                     </td>
 
@@ -185,107 +158,107 @@ const Team = ({ location }) => {
                                                 )}
                                         </tbody>    
                                     </table>
-                                </div>
-                   
-                                <div className="col-12 bg-success rounded p-2 mt-3 d-flex justify-content-center">
-                                    <h4 className="text-white">Proximos partidos</h4>
-                                </div>
-
-                                {nextMatches.map(match => 
-
-                                    <div key={match.id}>
-                                        
-                                        <div className="container mb-3">
-                                        <div className="row shadow rounded">
-                                            <div className="col-12 d-flex justify-content-center p-2 m-0 liga-nav">
-                                                {/* <span className="text-dark mx-3"><b>   </b></span> */}
-
-                                                <NavLink  className="nav-link text-decoration-none text-dark" to={{
-                                                                                            pathname: '/clasificaciones',
-                                                                                            state: { id: match.competition.id }
-                                                                                            }}>{match.competition.name}</NavLink>
-                                                <img className="rounded-circle" src={match.competition.area.ensignUrl} alt="" height="30px" width="30px" />
-                                            </div>
-                                            <div className="col-5 d-flex justify-content-end p-4 mb-2">
-                                            {/* <EquipoImage /> */}
-                                            <span className="mx-2"><NavLink  className="nav-link text-decoration-none text-dark" to={{
-                                                                                            pathname: '/team',
-                                                                                            state: { id: match.homeTeam.id }
-                                                                                            }}>{match.homeTeam.name}</NavLink></span>
-                                            </div>
-                                            <div className="col-2 d-flex justify-content-center p-4 mb-2">
-                                            {match.score.fullTime.homeTeam != null ?
-                                                    <span> {match.score.fullTime.homeTeam} &#45; {match.score.fullTime.awayTeam} </span>:
-                                                    <span> {match.utcDate.slice(11, -4)} </span> }
-                                            
-                                            </div>
-                                            <div className="col-5 d-flex justify-content-start p-4 mb-2">
-                                            <span className="mx-2"><NavLink  className="nav-link text-decoration-none text-dark" to={{
-                                                                                            pathname: '/team',
-                                                                                            state: { id: match.awayTeam.id }
-                                                                                            }}>{match.awayTeam.name}</NavLink></span>
-                                            {/* <EquipoImage /> */}
-                                            </div>
-
-                                        </div>
-                                        </div>
-                                        
+                                </Tab>
+                                <Tab eventKey="proximosPartidos" title="Proximos Partidos">
+                                    <div className="col-12 bg-success rounded p-2 mt-1 d-flex justify-content-center">
+                                        <h4 className="text-white">Proximos partidos</h4>
                                     </div>
-                                )}
-                            
 
+                                    {nextMatches.map(match => 
 
-                            
-                                <div className="col-12 bg-success rounded p-2 mt-3 d-flex justify-content-center">
-                                    <h4 className="text-white">Resultados últimos partidos</h4>
-                                </div>
-
-                                {previewMatches.map(match =>             
-                                    <div key={match.id}>
-                                        
-                                        <div className="container mb-3">
-                                        <div className="row shadow rounded">
-                                            <div className="col-12 d-flex justify-content-center p-2 m-0 liga-nav">
-                                                {/* <span className="text-dark mx-3"><b>   </b></span> */}
-
-                                                <NavLink  className="nav-link text-decoration-none text-dark" to={{
-                                                                                            pathname: '/clasificaciones',
-                                                                                            state: { id: match.competition.id }
-                                                                                            }}>{match.competition.name}</NavLink>
-                                                <img className="rounded-circle" src={match.competition.area.ensignUrl} alt="" height="30px" width="30px" />
-                                            </div>
-                                            <div className="col-5 d-flex justify-content-end p-4 mb-2">
-                                            {/* <EquipoImage /> */}
-                                            <span className="mx-2"><NavLink  className="nav-link text-decoration-none text-dark" to={{
-                                                                                            pathname: '/team',
-                                                                                            state: { id: match.homeTeam.id }
-                                                                                            }}>{match.homeTeam.name}</NavLink></span>
-                                            </div>
-                                            <div className="col-2 d-flex justify-content-center p-4 mb-2">
-                                            {match.score.fullTime.homeTeam != null ?
-                                                    <span> {match.score.fullTime.homeTeam} &#45; {match.score.fullTime.awayTeam} </span>:
-                                                    <span> {match.utcDate.slice(11, -4)} </span> }
+                                        <div key={match.id}>
                                             
-                                            </div>
-                                            <div className="col-5 d-flex justify-content-start p-4 mb-2">
-                                            <span className="mx-2"><NavLink  className="nav-link text-decoration-none text-dark" to={{
-                                                                                            pathname: '/team',
-                                                                                            state: { id: match.awayTeam.id }
-                                                                                            }}>{match.awayTeam.name}</NavLink></span>
-                                            {/* <EquipoImage /> */}
-                                            </div>
+                                            <div className="container mb-3">
+                                            <div className="row shadow rounded">
+                                                <div className="col-12 d-flex justify-content-center p-2 m-0 liga-nav">
+                                                    {/* <span className="text-dark mx-3"><b>   </b></span> */}
 
+                                                    <NavLink  className="nav-link text-decoration-none text-dark" to={{
+                                                                                                pathname: '/clasificaciones',
+                                                                                                state: { id: match.competition.id }
+                                                                                                }}>{match.competition.name}</NavLink>
+                                                    <img className="rounded-circle" src={match.competition.area.ensignUrl} alt="" height="30px" width="30px" />
+                                                </div>
+                                                <div className="col-5 d-flex justify-content-end p-4 mb-2">
+                                                {/* <EquipoImage /> */}
+                                                <span className="mx-2"><NavLink  className="nav-link text-decoration-none text-dark" to={{
+                                                                                                pathname: '/team',
+                                                                                                state: { id: match.homeTeam.id }
+                                                                                                }}>{match.homeTeam.name}</NavLink></span>
+                                                </div>
+                                                <div className="col-2 d-flex justify-content-center p-4 mb-2">
+                                                {match.score.fullTime.homeTeam != null ?
+                                                        <span> {match.score.fullTime.homeTeam} &#45; {match.score.fullTime.awayTeam} </span>:
+                                                        <span> {match.utcDate.slice(11, -4)} </span> }
+                                                
+                                                </div>
+                                                <div className="col-5 d-flex justify-content-start p-4 mb-2">
+                                                <span className="mx-2"><NavLink  className="nav-link text-decoration-none text-dark" to={{
+                                                                                                pathname: '/team',
+                                                                                                state: { id: match.awayTeam.id }
+                                                                                                }}>{match.awayTeam.name}</NavLink></span>
+                                                {/* <EquipoImage /> */}
+                                                </div>
+
+                                            </div>
+                                            </div>
+                                            
                                         </div>
-                                        </div>
-                                        
+                                    )}
+                                </Tab>
+                                <Tab eventKey="resultados" title="Resultados">
+                                    <div className="col-12 bg-success rounded p-2 mt-1 d-flex justify-content-center">
+                                        <h4 className="text-white">Resultados últimos partidos</h4>
                                     </div>
-                                    ).reverse()}
 
-                              
-                    
+                                    {previewMatches.map(match =>             
+                                        <div key={match.id}>
+                                            
+                                            <div className="container mb-3">
+                                            <div className="row shadow rounded">
+                                                <div className="col-12 d-flex justify-content-center p-2 m-0 liga-nav">
+                                                    {/* <span className="text-dark mx-3"><b>   </b></span> */}
+
+                                                    <NavLink  className="nav-link text-decoration-none text-dark" to={{
+                                                                                                pathname: '/clasificaciones',
+                                                                                                state: { id: match.competition.id }
+                                                                                                }}>{match.competition.name}</NavLink>
+                                                    <img className="rounded-circle" src={match.competition.area.ensignUrl} alt="" height="30px" width="30px" />
+                                                </div>
+                                                <div className="col-5 d-flex justify-content-end p-4 mb-2">
+                                                {/* <EquipoImage /> */}
+                                                <span className="mx-2"><NavLink  className="nav-link text-decoration-none text-dark" to={{
+                                                                                                pathname: '/team',
+                                                                                                state: { id: match.homeTeam.id }
+                                                                                                }}>{match.homeTeam.name}</NavLink></span>
+                                                </div>
+                                                <div className="col-2 d-flex justify-content-center p-4 mb-2">
+                                                {match.score.fullTime.homeTeam != null ?
+                                                        <span> {match.score.fullTime.homeTeam} &#45; {match.score.fullTime.awayTeam} </span>:
+                                                        <span> {match.utcDate.slice(11, -4)} </span> }
+                                                
+                                                </div>
+                                                <div className="col-5 d-flex justify-content-start p-4 mb-2">
+                                                <span className="mx-2"><NavLink  className="nav-link text-decoration-none text-dark" to={{
+                                                                                                pathname: '/team',
+                                                                                                state: { id: match.awayTeam.id }
+                                                                                                }}>{match.awayTeam.name}</NavLink></span>
+                                                {/* <EquipoImage /> */}
+                                                </div>
+
+                                            </div>
+                                            </div>
+                                            
+                                        </div>
+                                        ).reverse()}
+                                </Tab>
+                            </Tabs>
+
+                                    
+                        </div>
                  </div>
             </div>
         );
     }
  
-export default Team;
+export default Team

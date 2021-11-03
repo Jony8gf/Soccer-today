@@ -6,7 +6,8 @@ import Clasification from './Components/Clasification';
 import Team from './Components/Team';
 import Error from './Components/Error';
 import Navigation from './Components/Navigation';
-// import Header from './Components/Header'
+import Player from './Components/Player';
+import Match from './Components/SingleMatch';
  
 class App extends Component {
   render() {
@@ -18,6 +19,8 @@ class App extends Component {
              <Route path="/" component={Home} exact/>
              <Route path="/clasificaciones" component={Clasification}/>
              <Route path="/team" component={Team}/>
+             <Route path="/player" component={Player}/>
+             <Route path="/match" component={Match}/>
             <Route component={Error}/>
            </Switch>
         </div> 

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import EquipoImage from './EquipoImage'
 import {NavLink}  from 'react-router-dom';
 import DatePicker from "react-datepicker";
 
@@ -71,8 +70,10 @@ const llamadaApi = async () => {
   const json = await response.json()
   console.log(json)
   setMatches(json['matches'])
-
 }
+
+
+
 
   return (
       <div className="container">
@@ -120,7 +121,7 @@ const llamadaApi = async () => {
                     <img className="rounded-circle" src={match.competition.area.ensignUrl} alt="" height="30px" width="30px" />
                 </div>
                 <div className="col-5 d-flex justify-content-end p-4 mb-2">
-                  {/* <EquipoImage /> */}
+                  
                   <span className="mx-2"><NavLink  className="nav-link text-decoration-none text-dark" to={{
                                                                 pathname: '/team',
                                                                 state: { id: match.homeTeam.id }
@@ -129,7 +130,9 @@ const llamadaApi = async () => {
                 <div className="col-2 d-flex justify-content-center p-4 mb-2">
                   {match.score.fullTime.homeTeam != null ?
                           <span> {match.score.fullTime.homeTeam} &#45; {match.score.fullTime.awayTeam} </span>:
-                          <span> {match.utcDate.slice(11, -4)} </span> }
+                          <span> 
+                            {match.utcDate.slice(11, -4)}
+                         </span> }
                   
                 </div>
                 <div className="col-5 d-flex justify-content-start p-4 mb-2">
@@ -137,8 +140,14 @@ const llamadaApi = async () => {
                                                                 pathname: '/team',
                                                                 state: { id: match.awayTeam.id }
                                                                 }}>{match.awayTeam.name}</NavLink></span>
-                  {/* <EquipoImage /> */}
                 </div>
+
+                {/* <div className="col-12 rounded d-grid gap-2 mb-2">
+                  <NavLink  className="btn btn btn-outline-success mb-2" to={{
+                                                                pathname: '/match',
+                                                                state: { id: match.id }
+                                                                }}>Ir al partido</NavLink>
+                </div> */}
 
               </div>
             </div>
